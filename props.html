@@ -1,0 +1,24 @@
+<head>
+</head>
+<body>
+	<div id="root"></div>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.18.1/babel.min.js"></script>
+
+	<script type="text/babel">
+
+	function Welcome(props) {
+		return <h1>Hello, {props.name}</h1>;
+	}
+
+	ReactDOM.render(
+		<div>
+			<Welcome name='random website viewer!' /> // name='random website viewer' is the props part.
+			<Welcome name='not-so-random website viewer!' /> //  You can reuse the same component with different props.
+		</div>
+		,document.getElementById('root')
+	)
+
+	</script>
+</body>
