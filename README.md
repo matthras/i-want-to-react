@@ -12,11 +12,15 @@ To teach myself React by building a ton of very small projects that individually
 
 ## Why?
 
-* I learn best from examples. I hate video tutorials and sometimes it's frustrating to google something and plow through unhelpful Stackexchange posts.
+* I want a central place where I can go to, identify exactly what I want, and immediately understand how to do it from looking at a simple example.
+* I learn best from reverse-engineering examples and figuring out how things work, THEN confirming with or referring to the theory when stuck.
+* I hate video tutorials because I visually process information much faster than listening to someone's voice.
+* It's frustrating to google something and plow through unhelpful Stackexchange posts.
 
 ## Menu
 
 I want to:
 
+0. understand how to load React & Babel in the front-end - template.html
 1. write 'Hello World' in React in the simplest way possible - helloworld.html
-2. understand 'props' - props.html
+2. understand props - props.html
