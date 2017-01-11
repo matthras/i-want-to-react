@@ -24,3 +24,4 @@ I want to:
 0. understand how to load React & Babel in the front-end - template.html
 1. write 'Hello World' in React in the simplest way possible - helloworld.html
 2. understand props - props.html
+67. build a markdown previewer - markdownpreviewer.html
