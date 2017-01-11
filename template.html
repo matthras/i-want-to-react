@@ -1,0 +1,17 @@
+<!-- Template file for ALL React projects. Loads React + Babel-Standalone -->
+<!-- Take note of the way the scripts are ordered at the end of the <body> tag -->
+<head>
+</head>
+<body>
+	<div id="root"></div>
+	<!-- Load React -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.js"></script>
+	<!-- Load Babel -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.18.1/babel.min.js"></script>
+	<!-- Your custom script here -->
+	<script type="text/babel">
+	const getMessage = () => "Hello World";
+	document.getElementById('root').innerHTML = getMessage();
+	</script>
+</body>
