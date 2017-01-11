@@ -1,0 +1,42 @@
+<head>
+</head>
+<body>
+	<div id="root"></div>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.18.1/babel.min.js"></script>
+	<!-- 'marked' library that allows for rendering markup -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.6/marked.min.js"></script>
+
+	<script type="text/babel">
+
+	class TextBox extends React.Component {
+	  constructor(props) {
+	    super(props);
+	  this.state = {
+	    value: "# Hello visitor.\n\n **Don't forget to expand the textbox!**\n\n Lack of CSS styling will do that."
+	  };
+	  this.handleChange = this.handleChange.bind(this);
+	  }
+
+	  handleChange(event) {
+	    this.setState({value: event.target.value});
+	  }
+
+	  render() {
+	    return (
+				<div>
+				<div><textarea value={this.state.value} onChange={this.handleChange}></textarea></div>
+	      <div dangerouslySetInnerHTML={{__html: marked(this.state.value)}}></div>
+				</div>
+	  )}
+	}
+
+	ReactDOM.render(
+	  <TextBox />,
+	  document.getElementById('root')
+	);
+
+
+	</script>
+</body>
