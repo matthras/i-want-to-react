@@ -1,0 +1,61 @@
+<head>
+</head>
+<body>
+	<div id="root"></div>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.18.1/babel.min.js"></script>
+	<!-- Loading jQuery library -->
+	<script src="https://code.jquery.com/jquery-3.1.1.js" integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="
+  crossorigin="anonymous"></script>
+
+	<script type="text/babel">
+	var MovieList = React.createClass({
+		render: function() {
+			var movieNodes = this.props.data.map(function(movie) {
+				return (
+					<li>{movie.Title}, {movie.Year}</li>
+				);
+			});
+		return (
+			<ul>
+				{movieNodes}
+			</ul>
+		);
+		}
+	})
+
+
+	var Movies = React.createClass({
+		getInitialState: function() {
+			return {data: []};
+		},
+		componentDidMount: function() {
+	      $.ajax({
+	      url: this.props.url,
+	      dataType: 'json',
+	      cache: false,
+	      success: function(data) {
+	        this.setState({data: data.Search}); // Notice this
+	      }.bind(this),
+	      error: function(xhr, status, err) {
+	        console.error(this.props.url, status, err.toString());
+	      }.bind(this)
+	    });
+	  },
+		render: function() {
+			return (
+				<div>
+						<MovieList data={this.state.data} />
+				</div>
+			);
+		}
+	})
+
+
+	ReactDOM.render(
+		<Movies url="http://www.omdbapi.com/?s=star%20wars&type=movie&y=" />,
+		document.getElementById('root')
+	)
+	</script>
+</body>
