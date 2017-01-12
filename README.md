@@ -24,4 +24,15 @@ I want to:
 0. understand how to load React & Babel in the front-end - template.html
 1. write 'Hello World' in React in the simplest way possible - helloworld.html
 2. understand props - props.html
-67. build a markdown previewer - markdownpreviewer.html
+
+* build a markdown previewer - markdownpreviewer.html
+
+**To Do**
+
+* understand state
+* make an API call using fetch, and bind the results to state
+* pass data from parent state to child components
+* understand componentDidMount, componentWillMount, etc.
+* handle events - click of a button, on change, on mousemove, etc.
+* type text into a textbox, and have it appear as is in another section
+*
