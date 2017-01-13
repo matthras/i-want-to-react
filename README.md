@@ -6,11 +6,12 @@ To teach myself React by building a ton of very small projects that individually
 
 ## Conditions
 
-* Every project is a single file that can be opened locally.
+* Every project is a single HTML file that can be downloaded and opened locally.
+* Must use CDNs for JS/CSS libraries.
 * Every project must be written with just enough code to demonstrate the concept.
 * Minimal or no CSS, unless it is to demonstrate a React concept.
 * If there is more than one way to perform a certain task, the simplest and most readable should be featured. By the time you're a React expert, you'll know better.
-* ES2015 (or at least, the latest version) syntax when possible, since Babel takes care of it.
+* Stick to ES2015 syntax when possible (currently not a priority as I'm not familiar with all features)
 
 ## Why?
 
@@ -26,6 +27,13 @@ I want to:
 1. write 'Hello World' in React in the simplest way possible - helloworld.html
 2. understand props - props.html
 
+__Event Handling__
+
+* change text on button upon clicking button (from Facebook's React Tutorial) - buttonclick.html
+* change text upon clicking other text - textclick.html
+
+__Uncategorised__
+
 * make an API call using jQuery, bind the results to state and output a list of Star Wars movies - apicallbind.html
 * build a markdown previewer - markdownpreviewer.html
 
@@ -34,7 +42,7 @@ I want to:
 * understand state
 * pass data from parent state to child components
 * understand componentDidMount, componentWillMount, etc.
-* handle events - click of a button, on change, on mousemove, etc.
+* handle events - on change, on mousemove, etc.
 
 Breaking down FCC Camper Leaderboard Task
 * make an API call using fetch/jQuery, and bind the results to state (Q: How to check if successful?)
