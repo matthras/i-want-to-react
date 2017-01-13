@@ -1,0 +1,41 @@
+<!--  Copied straight from Handling Events: https://facebook.github.io/react/docs/handling-events.html -->
+<head>
+</head>
+<body>
+	<div id="root"></div>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.18.1/babel.min.js"></script>
+	<script type="text/babel">
+
+	class Toggle extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {isToggleOn: true}; // Sets the toggle to 'true'
+    // This binding is necessary to make `this` work in the callback
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick() {
+		// prevState comes from the setState API that refers to the current state BEFORE we change it
+		// (since setState implies that we're changing the state)
+    this.setState(prevState => ({
+      isToggleOn: !prevState.isToggleOn // switches between true/false
+    }));
+  }
+
+  render() {
+    return (
+      <button onClick={this.handleClick}>
+        {this.state.isToggleOn ? 'ON' : 'OFF'}
+      </button>
+    );
+  }
+}
+
+	ReactDOM.render(
+	  <Toggle />,
+	  document.getElementById('root')
+	);
+	</script>
+</body>
