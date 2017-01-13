@@ -1,0 +1,44 @@
+<!--  Copied straight from Handling Events: https://facebook.github.io/react/docs/handling-events.html -->
+<head>
+</head>
+<body>
+	<div id="root"></div>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.18.1/babel.min.js"></script>
+	<script type="text/babel">
+
+	class Toggle extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {click: 'nothing'}; // Sets the toggle to 'true'
+    // This binding is necessary to make `this` work in the callback
+    this.leftClick = this.leftClick.bind(this);
+		this.rightClick = this.rightClick.bind(this);
+  }
+
+	leftClick() {
+		this.setState({click: 'left'});
+	}
+
+	rightClick() {
+		this.setState({click:'right'});
+	}
+
+  render() {
+    return (
+			<div>
+				<span onClick={this.leftClick}>Left!</span> <br />
+				<span onClick={this.rightClick}>Right!</span> <br />
+				<h1>You clicked {this.state.click}!</h1>
+			</div>
+    );
+  }
+}
+
+	ReactDOM.render(
+	  <Toggle />,
+	  document.getElementById('root')
+	);
+	</script>
+</body>
