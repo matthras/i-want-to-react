@@ -2,20 +2,21 @@
 
 ## Aim
 
-To teach myself React by building a ton of very small projects that individually demonstrate one React concept at a time.
+To teach myself React by building a ton of very small projects that individually demonstrate one React concept at a time. The end goal is a central repository of React resources that consist of 'building blocks' for React which contains modular and reusable code.
 
 ## Conditions
 
 * Every project is a single file that can be opened locally.
 * Every project must be written with just enough code to demonstrate the concept.
 * Minimal or no CSS, unless it is to demonstrate a React concept.
+* If there is more than one way to perform a certain task, the simplest and most readable should be featured. By the time you're a React expert, you'll know better.
+* ES2015 (or at least, the latest version) syntax when possible, since Babel takes care of it.
 
 ## Why?
 
 * I want a central place where I can go to, identify exactly what I want, and immediately understand how to do it from looking at a simple example.
 * I learn best from reverse-engineering examples and figuring out how things work, THEN confirming with or referring to the theory when stuck.
 * I hate video tutorials because I visually process information much faster than listening to someone's voice.
-* It's frustrating to google something and plow through unhelpful Stackexchange posts.
 
 ## Menu
 
