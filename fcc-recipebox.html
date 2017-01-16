@@ -1,0 +1,89 @@
+
+<!-- 
+	RecipeBox Component
+	> RecipeList Component (Look up how to create a to-do list)
+	> Add Recipe Button - should modify state of RecipeBox component
+
+	How do we store recipe data as JSON in localStorage?
+
+	localStorage.fccRecipeBox = {
+		[{
+			name: 'Pumpkin Pie',
+			ingredients: 'pumpkin puree, sweetened condensed milk, eggs, pumpkin pie spice, pie crust'
+		},
+		{
+			name: 'Spaghetti',
+			ingredients: 'spaghetti noodles, tomato sauce, meatballs'
+		},
+		etc.]
+	}
+	--> 
+
+<head>
+	<!-- Use Foundation for Accordian for list styling -->
+</head>
+<body>
+	<div id="root"></div>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.18.1/babel.min.js"></script>
+
+	<script type="text/babel">
+
+	class RecipeBox extends React.Component {
+		constructor(props) {
+		super(props);
+		this.state = {data: [{
+			name: 'Pumpkin Pie',
+			ingredients: 'pumpkin puree, sweetened condensed milk, eggs, pumpkin pie spice, pie crust'
+		},
+		{
+			name: 'Spaghetti',
+			ingredients: 'spaghetti noodles, tomato sauce, meatballs'
+		}] }
+
+		}
+
+
+
+	render() {
+		return (
+			<RecipeList recipedata = {this.state.data} />
+		)
+	}
+
+	}
+
+	class RecipeList extends React.Component{
+	render() {
+		var recipeData = this.props.recipedata.map(function(recipe) {
+			return (
+				<ul>{recipe.name}
+					<ul>
+					<RecipeIngredients ingredients={recipe.ingredients.split(',')} />
+					</ul>
+				</ul>
+			)
+		})
+	}
+	}
+
+	class RecipeIngredients extends React.Component{
+	render() {
+		var ingredients = this.props.ingredients.map(function(ingredient) {
+			return(
+				<li>{ingredient}</li>
+			)
+		}) 
+	}
+
+	}
+
+
+	ReactDOM.render(
+		<RecipeBox />,
+		document.getElementById('root')
+	)
+
+	</script>
+</body>
