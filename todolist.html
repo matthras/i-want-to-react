@@ -1,0 +1,56 @@
+<!-- Adapted from https://www.kirupa.com/react/simple_todo_app_react.htm -->
+<head>
+</head>
+<body>
+	<div id="root"></div>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.18.1/babel.min.js"></script>
+
+	<script type="text/babel">
+	
+	class ToDos extends React.Component{
+		render() {
+			var todoNodes = this.props.data.map(function(item) {
+				return(
+					<li>{item}</li>
+					)
+			})
+			return(
+				<ul>
+					{todoNodes}
+				</ul>
+			)
+		}
+	}
+
+	class ToDoList extends React.Component{
+		constructor(props){
+		super(props);
+		this.state = {data: ['rob a bank', 'buy drugs', 'bang hookers']}
+		this.addItem = this.addItem.bind(this)
+		}
+
+	addItem() {
+		var itemArray = this.state.data;
+		itemArray.push(document.getElementById("derpInput").value)
+		this.setState({data: itemArray})
+	}
+
+	render() {
+		return(
+		<div>
+			<input id="derpInput"></input>
+			<button onClick={this.addItem}>Add</button>
+			<ToDos data={this.state.data} />
+		</div>
+		)	
+	}
+	}
+
+	ReactDOM.render(
+		<ToDoList />,
+		document.getElementById("root")
+	)
+	</script>
+</body>
