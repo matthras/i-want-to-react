@@ -32,37 +32,61 @@
 
 	class RecipeBox extends React.Component {
 		constructor(props) {
-		super(props);
-		this.state = {data: [{
-			name: 'Pumpkin Pie',
-			ingredients: 'pumpkin puree, sweetened condensed milk, eggs, pumpkin pie spice, pie crust'
-		},
-		{
-			name: 'Spaghetti',
-			ingredients: 'spaghetti noodles, tomato sauce, meatballs'
-		}] }
-
+			super(props);
+			this.state = {data: [{
+					id: 1,
+					name: 'Pumpkin Pie',
+					ingredients: 'pumpkin puree, sweetened condensed milk, eggs, pumpkin pie spice, pie crust'
+				},
+				{
+					id: 2,
+					name: 'Spaghetti',
+					ingredients: 'spaghetti noodles, tomato sauce, meatballs'
+				}]
+			}
+			//this.updateRecipeList = this.updateRecipeList.bind(this);
+			this.deleteRecipe = this.deleteRecipe.bind(this);
 		}
-	render() {
-		return (
-			<RecipeList recipedata = {this.state.data} />
-		)
-	}
+		// When I add a new recipe
+		// updateRecipeList() {
+		// 	var recipes = {this.state.data}
+		// 	recipes.push() // new recipe
+		// 	this.setState({data: recipes})
+		// };
+		// Delete a recipe
+		deleteRecipe(item) {
+			var items = this.state.data.filter(function(itm){
+				return item.id !== itm.id;
+			});
+			this.setState({data: items})
+		}
 
-	}
-
-	class RecipeList extends React.Component{
-	render() {
-		var recipeData = this.props.recipedata.map(function(recipe) {
+		render() {
 			return (
-				<li>{recipe.name}
-					<RecipeIngredients ingredients={recipe.ingredients.split(', ')} />
-				</li>
-			)});
-		return (
-			<ul>
-					{recipeData}
-			</ul>
+				<RecipeList recipedata={this.state.data} onRemove={this.deleteRecipe}/>
+			)
+		}
+	}
+
+	class RecipeList extends React.Component {
+		remove(recipe){
+			return function(e) {
+				e.preventDefault();
+				return this.props.onRemove(recipe);
+			}.bind(this);
+		}
+		render() {
+			var recipeData = this.props.recipedata.map(function(recipe,i) {
+				return (
+					<li key={i}>{recipe.name}
+						<RecipeIngredients ingredients={recipe.ingredients.split(', ')} />
+						<button data-id={recipe.id} onClick={this.remove(recipe)}>Remove</button>
+					</li>
+				)}.bind(this));
+			return (
+				<ul>
+						{recipeData}
+				</ul>
 			)
 		}
 	}
@@ -70,7 +94,6 @@
 	class RecipeIngredients extends React.Component{
 	render() {
 		var ingredients = this.props.ingredients.map(function(ingredient) {
-			console.log(ingredient);
 			return(
 				<li>{ingredient}</li>
 			)
