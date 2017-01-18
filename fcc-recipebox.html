@@ -1,5 +1,5 @@
 
-<!-- 
+<!--
 	RecipeBox Component
 	> RecipeList Component (Look up how to create a to-do list)
 	> Add Recipe Button - should modify state of RecipeBox component
@@ -17,7 +17,7 @@
 		},
 		etc.]
 	}
-	--> 
+	-->
 
 <head>
 	<!-- Use Foundation for Accordian for list styling -->
@@ -43,9 +43,6 @@
 		}] }
 
 		}
-
-
-
 	render() {
 		return (
 			<RecipeList recipedata = {this.state.data} />
@@ -58,23 +55,31 @@
 	render() {
 		var recipeData = this.props.recipedata.map(function(recipe) {
 			return (
-				<ul>{recipe.name}
-					<ul>
-					<RecipeIngredients ingredients={recipe.ingredients.split(',')} />
-					</ul>
-				</ul>
+				<li>{recipe.name}
+					<RecipeIngredients ingredients={recipe.ingredients.split(', ')} />
+				</li>
+			)});
+		return (
+			<ul>
+					{recipeData}
+			</ul>
 			)
-		})
-	}
+		}
 	}
 
 	class RecipeIngredients extends React.Component{
 	render() {
 		var ingredients = this.props.ingredients.map(function(ingredient) {
+			console.log(ingredient);
 			return(
 				<li>{ingredient}</li>
 			)
-		}) 
+		})
+		return (
+			<ul>
+				{ingredients}
+			</ul>
+		)
 	}
 
 	}
