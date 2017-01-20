@@ -44,15 +44,9 @@
 					ingredients: 'spaghetti noodles, tomato sauce, meatballs'
 				}]
 			}
-			//this.updateRecipeList = this.updateRecipeList.bind(this);
+			this.addRecipe = this.addRecipe.bind(this);
 			this.deleteRecipe = this.deleteRecipe.bind(this);
 		}
-		// When I add a new recipe
-		// updateRecipeList() {
-		// 	var recipes = {this.state.data}
-		// 	recipes.push() // new recipe
-		// 	this.setState({data: recipes})
-		// };
 		// Delete a recipe
 		deleteRecipe(item) {
 			var items = this.state.data.filter(function(itm){
@@ -61,9 +55,17 @@
 			this.setState({data: items})
 		}
 
+		addRecipe(item) {
+			var dummyStatedata = this.state.data;
+			dummyStatedata.push(item);
+			this.setState({data: dummyStatedata})
+		}
 		render() {
 			return (
-				<RecipeList recipedata={this.state.data} onRemove={this.deleteRecipe}/>
+				<div>
+					<RecipeList recipedata={this.state.data} onRemove={this.deleteRecipe}/>
+					<AddRecipe onAdd={this.addRecipe} />
+				</div>
 			)
 		}
 	}
@@ -104,9 +106,27 @@
 			</ul>
 		)
 	}
-
 	}
 
+	class AddRecipe extends React.Component{
+		addRecipeComponentButton() {
+			return function(e) {
+				e.preventDefault();
+				var recipe = {name: document.getElementById("recipeInput").value, ingredients: document.getElementById("recipeIngredients").value}
+				return this.props.onAdd(recipe);
+			}.bind(this);
+		}
+		render() {
+			return(
+				<div>
+					<p><strong>Recipe Name</strong> <br />
+					<input type="text" id="recipeInput" /></p>
+					<p><strong>Ingredients</strong> <br />
+					<input type="text" id="recipeIngredients" /></p>
+					<button onClick={this.addRecipeComponentButton()}>Add Recipe</button>
+				</div>
+			)
+	}}
 
 	ReactDOM.render(
 		<RecipeBox />,
