@@ -1,35 +1,13 @@
-
-<!--
-	RecipeBox Component
-	> RecipeList Component (Look up how to create a to-do list)
-	> Add Recipe Button - should modify state of RecipeBox component
-
-	How do we store recipe data as JSON in localStorage?
-
-	localStorage.fccRecipeBox = {
-		[{
-			name: 'Pumpkin Pie',
-			ingredients: 'pumpkin puree, sweetened condensed milk, eggs, pumpkin pie spice, pie crust'
-		},
-		{
-			name: 'Spaghetti',
-			ingredients: 'spaghetti noodles, tomato sauce, meatballs'
-		},
-		etc.]
-	}
-	-->
-
 <head>
-	<!-- Use Foundation for Accordian for list styling -->
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.3.0/css/foundation.min.css"></link>
 </head>
 <body>
 	<div id="root"></div>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.18.1/babel.min.js"></script>
-
+	<script src="collapsible.js"></script>
 	<script type="text/babel">
-
 	class RecipeBox extends React.Component {
 		constructor(props) {
 			super(props);
@@ -62,9 +40,11 @@
 		}
 		render() {
 			return (
-				<div>
-					<RecipeList recipedata={this.state.data} onRemove={this.deleteRecipe}/>
-					<AddRecipe onAdd={this.addRecipe} />
+				<div className="row">
+					<div className="small-12 medium-offset-1 medium-10 columns">
+						<RecipeList recipedata={this.state.data} onRemove={this.deleteRecipe}/>
+						<AddRecipe onAdd={this.addRecipe} />
+					</div>
 				</div>
 			)
 		}
@@ -82,7 +62,7 @@
 				return (
 					<li key={i}>{recipe.name}
 						<RecipeIngredients ingredients={recipe.ingredients.split(', ')} />
-						<button data-id={recipe.id} onClick={this.remove(recipe)}>Remove</button>
+						<button type="button" className="button alert" data-id={recipe.id} onClick={this.remove(recipe)}>Remove</button>
 					</li>
 				)}.bind(this));
 			return (
@@ -123,7 +103,7 @@
 					<input type="text" id="recipeInput" /></p>
 					<p><strong>Ingredients</strong> <br />
 					<input type="text" id="recipeIngredients" /></p>
-					<button onClick={this.addRecipeComponentButton()}>Add Recipe</button>
+					<button type="button" className="button primary" onClick={this.addRecipeComponentButton()}>Add Recipe</button>
 				</div>
 			)
 	}}
@@ -132,6 +112,5 @@
 		<RecipeBox />,
 		document.getElementById('root')
 	)
-
 	</script>
 </body>
