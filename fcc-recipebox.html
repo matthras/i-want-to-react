@@ -1,12 +1,25 @@
 <head>
-	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.3.0/css/foundation.min.css"></link>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css"></link>
 </head>
 <body>
 	<div id="root"></div>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react-bootstrap/0.30.7/react-bootstrap.js"></script>
+	<script>
+	var Alert = ReactBootstrap.Alert;
+	var Row = ReactBootstrap.Row;
+	var Grid = ReactBootstrap.Grid;
+	var Col = ReactBootstrap.Col;
+	var Button = ReactBootstrap.Button;
+	var Accordion = ReactBootstrap.Accordion;
+	var Panel = ReactBootstrap.Panel;
+	var ListGroup = ReactBootstrap.ListGroup;
+	var ListGroupItem = ReactBootstrap.ListGroupItem;
+	var PanelGroup = ReactBootstrap.PanelGroup;
+	var Modal = ReactBootstrap.Modal;
+	</script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.18.1/babel.min.js"></script>
-	<script src="collapsible.js"></script>
 	<script type="text/babel">
 	class RecipeBox extends React.Component {
 		constructor(props) {
@@ -40,12 +53,16 @@
 		}
 		render() {
 			return (
-				<div className="row">
-					<div className="small-12 medium-offset-1 medium-10 columns">
+				<Grid>
+				<Row className="show-grid">
+					<Col xs={12} md={10} mdOffset={1} >
+						<h1>FreeCodeCamp Recipe Box Project</h1>
 						<RecipeList recipedata={this.state.data} onRemove={this.deleteRecipe}/>
 						<AddRecipe onAdd={this.addRecipe} />
-					</div>
-				</div>
+						<AddRecipeModal />
+					</Col>
+				</Row>
+				</Grid>
 			)
 		}
 	}
@@ -60,15 +77,18 @@
 		render() {
 			var recipeData = this.props.recipedata.map(function(recipe,i) {
 				return (
-					<li key={i}>{recipe.name}
-						<RecipeIngredients ingredients={recipe.ingredients.split(', ')} />
-						<button type="button" className="button alert" data-id={recipe.id} onClick={this.remove(recipe)}>Remove</button>
-					</li>
+					<PanelGroup accordion>
+							<Panel collapsible header={recipe.name}>
+							<RecipeIngredients ingredients={recipe.ingredients.split(', ')} />
+							<Button bsStyle="danger" data-id={recipe.id} onClick={this.remove(recipe)}>Remove</Button>
+							</Panel>
+					</PanelGroup>
 				)}.bind(this));
 			return (
-				<ul>
-						{recipeData}
-				</ul>
+				<div>
+					<h2>Recipes</h2>
+					{recipeData}
+				</div>
 			)
 		}
 	}
@@ -77,13 +97,13 @@
 	render() {
 		var ingredients = this.props.ingredients.map(function(ingredient) {
 			return(
-				<li>{ingredient}</li>
+				<ListGroupItem>{ingredient}</ListGroupItem>
 			)
 		})
 		return (
-			<ul>
+			<ListGroup>
 				{ingredients}
-			</ul>
+			</ListGroup>
 		)
 	}
 	}
@@ -107,6 +127,48 @@
 				</div>
 			)
 	}}
+
+	var AddRecipeModal = React.createClass({
+		getInitialState() {
+			return { showModal: false };
+		},
+		close() {
+			this.setState({ showModal:false });
+		},
+		open() {
+			this.setState({ showModal: true });
+		},
+		addRecipeComponentButton() {
+			return function(e) {
+				e.preventDefault();
+				var recipe = {name: document.getElementById("recipeInput").value, ingredients: document.getElementById("recipeIngredients").value}
+				return this.props.onAdd(recipe);
+			}.bind(this);
+		},
+
+		render() {
+			return(
+				<div>
+					<Button bsStyle="primary" onClick={this.open}>Add Recipe</Button>
+					<Modal show={this.state.showModal} onHide={this.close}>
+						<Modal.Header closeButton>
+							<Modal.Title>Add a recipe!</Modal.Title>
+						</Modal.Header>
+						<Modal.Body>
+							<p><strong>Recipe Name</strong> <br />
+							<input type="text" id="recipeInput" /></p>
+							<p><strong>Ingredients</strong> <br />
+							<input type="text" id="recipeIngredients" /></p>
+						</Modal.Body>
+						<Modal.Footer>
+							<Button onClick={this.addRecipeComponentButton()}>Add Recipe To List</Button>
+							<Button onClick={this.close}>Close</Button>
+						</Modal.Footer>
+					</Modal>
+				</div>
+				)
+		}
+	})
 
 	ReactDOM.render(
 		<RecipeBox />,
