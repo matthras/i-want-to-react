@@ -18,27 +18,32 @@
 	var ListGroupItem = ReactBootstrap.ListGroupItem;
 	var PanelGroup = ReactBootstrap.PanelGroup;
 	var Modal = ReactBootstrap.Modal;
+
+	var slugify = function(string) {
+		return string.replace(/\s+/g,'').toLowerCase();
+	}
+	localStorage.setItem('recipes',
+			JSON.stringify({data: [{
+				id: 'pumpkinpie',
+				name: 'Pumpkin Pie',
+				ingredients: 'pumpkin puree, sweetened condensed milk, eggs, pumpkin pie spice, pie crust'
+			},
+			{
+				id: 'spaghetti',
+				name: 'Spaghetti',
+				ingredients: 'spaghetti noodles, tomato sauce, meatballs'
+			}]}));
 	</script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.18.1/babel.min.js"></script>
 	<script type="text/babel">
 	class RecipeBox extends React.Component {
 		constructor(props) {
 			super(props);
-			this.state = {data: [{
-					id: 1,
-					name: 'Pumpkin Pie',
-					ingredients: 'pumpkin puree, sweetened condensed milk, eggs, pumpkin pie spice, pie crust'
-				},
-				{
-					id: 2,
-					name: 'Spaghetti',
-					ingredients: 'spaghetti noodles, tomato sauce, meatballs'
-				}]
-			}
+			this.state = JSON.parse(localStorage.getItem('recipes'))
 			this.addRecipe = this.addRecipe.bind(this);
 			this.deleteRecipe = this.deleteRecipe.bind(this);
+			this.editRecipe = this.editRecipe.bind(this);
 		}
-		// Delete a recipe
 		deleteRecipe(item) {
 			var items = this.state.data.filter(function(itm){
 				return item.id !== itm.id;
@@ -51,15 +56,27 @@
 			dummyStatedata.push(item);
 			this.setState({data: dummyStatedata})
 		}
+
+		editRecipe(item) {
+			var dummyStatedata = this.state.data;
+			for(var i=0; i<dummyStatedata.length; i++){
+				if (item.id === dummyStatedata[i].id) {
+					dummyStatedata[i].name = item.name;
+					dummyStatedata[i].ingredients = item.ingredients;
+					break;
+				}
+			}
+			this.setState({data:dummyStatedata})
+		}
+
 		render() {
 			return (
 				<Grid>
 				<Row className="show-grid">
 					<Col xs={12} md={10} mdOffset={1} >
 						<h1>FreeCodeCamp Recipe Box Project</h1>
-						<RecipeList recipedata={this.state.data} onRemove={this.deleteRecipe}/>
-						<AddRecipe onAdd={this.addRecipe} />
-						<AddRecipeModal />
+						<RecipeList recipedata={this.state.data} onRemove={this.deleteRecipe} onEdit={this.editRecipe} />
+						<AddRecipeModal onAdd={this.addRecipe} />
 					</Col>
 				</Row>
 				</Grid>
@@ -68,11 +85,19 @@
 	}
 
 	class RecipeList extends React.Component {
+		constructor(props) {
+			super(props);
+			this.remove = this.remove.bind(this);
+			this.edit = this.edit.bind(this);
+		}
 		remove(recipe){
 			return function(e) {
 				e.preventDefault();
 				return this.props.onRemove(recipe);
 			}.bind(this);
+		}
+		edit(recipe){
+			return this.props.onEdit(recipe);
 		}
 		render() {
 			var recipeData = this.props.recipedata.map(function(recipe,i) {
@@ -81,6 +106,7 @@
 							<Panel collapsible header={recipe.name}>
 							<RecipeIngredients ingredients={recipe.ingredients.split(', ')} />
 							<Button bsStyle="danger" data-id={recipe.id} onClick={this.remove(recipe)}>Remove</Button>
+							<EditRecipeModal recipeName={recipe.name} recipeIngredients={recipe.ingredients} editRecipeFunction={this.edit} />
 							</Panel>
 					</PanelGroup>
 				)}.bind(this));
@@ -90,6 +116,63 @@
 					{recipeData}
 				</div>
 			)
+		}
+	}
+
+	class EditRecipeModal extends React.Component {
+		constructor(props) {
+			super(props);
+			this.state = { nameValue: props.recipeName, ingredientValue: props.recipeIngredients, showModal: false };
+
+			this.handleNameChange = this.handleNameChange.bind(this);
+			this.handleIngredientChange = this.handleIngredientChange.bind(this);
+			this.close = this.close.bind(this);
+			this.open = this.open.bind(this);
+			this.editRecipeModalButton = this.editRecipeModalButton.bind(this);
+		}
+
+		handleNameChange(event) {
+			this.setState({nameValue: event.target.value})
+		}
+		handleIngredientChange(event) {
+			this.setState({ingredientValue: event.target.value})
+		}
+		close() {
+			this.setState({ showModal: false })
+		}
+		open() {
+			this.setState({ showModal: true })
+		}
+		editRecipeModalButton() {
+			return function(e) {
+				e.preventDefault();
+				var recipe = {
+					id: slugify(document.getElementById("editRecipeName").value), 
+					name: document.getElementById("editRecipeName").value,
+					ingredients: document.getElementById("editRecipeIngredients").value
+				}
+				return this.props.editRecipeFunction(recipe);
+			}.bind(this);
+		}
+		render() {
+			return(
+				<div>
+					<Button onClick={this.open}>Edit</Button>
+					<Modal show={this.state.showModal} onHide={this.close}>
+						<Modal.Header closeButton>Edit Recipe</Modal.Header>
+						<Modal.Body>
+							<p><strong>Recipe Name</strong> <br />
+							<input type="text" id="editRecipeName" value={this.state.nameValue} onChange={this.handleNameChange} /></p>
+							<p><strong>Ingredients</strong> <br />
+							<input type="text" id="editRecipeIngredients" value={this.state.ingredientValue} onChange={this.handleIngredientChange} /></p>
+						</Modal.Body>
+						<Modal.Footer>
+							<Button onClick={this.editRecipeModalButton()}>Confirm Edit</Button>
+							<Button onClick={this.close}>Close</Button>
+						</Modal.Footer>
+					</Modal>
+				</div>
+				)
 		}
 	}
 
@@ -108,26 +191,6 @@
 	}
 	}
 
-	class AddRecipe extends React.Component{
-		addRecipeComponentButton() {
-			return function(e) {
-				e.preventDefault();
-				var recipe = {name: document.getElementById("recipeInput").value, ingredients: document.getElementById("recipeIngredients").value}
-				return this.props.onAdd(recipe);
-			}.bind(this);
-		}
-		render() {
-			return(
-				<div>
-					<p><strong>Recipe Name</strong> <br />
-					<input type="text" id="recipeInput" /></p>
-					<p><strong>Ingredients</strong> <br />
-					<input type="text" id="recipeIngredients" /></p>
-					<button type="button" className="button primary" onClick={this.addRecipeComponentButton()}>Add Recipe</button>
-				</div>
-			)
-	}}
-
 	var AddRecipeModal = React.createClass({
 		getInitialState() {
 			return { showModal: false };
@@ -138,7 +201,7 @@
 		open() {
 			this.setState({ showModal: true });
 		},
-		addRecipeComponentButton() {
+		addRecipeModalButton() {
 			return function(e) {
 				e.preventDefault();
 				var recipe = {name: document.getElementById("recipeInput").value, ingredients: document.getElementById("recipeIngredients").value}
@@ -161,7 +224,7 @@
 							<input type="text" id="recipeIngredients" /></p>
 						</Modal.Body>
 						<Modal.Footer>
-							<Button onClick={this.addRecipeComponentButton()}>Add Recipe To List</Button>
+							<Button onClick={this.addRecipeModalButton()}>Add Recipe To List</Button>
 							<Button onClick={this.close}>Close</Button>
 						</Modal.Footer>
 					</Modal>
