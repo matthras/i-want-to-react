@@ -22,8 +22,9 @@
 	var slugify = function(string) {
 		return string.replace(/\s+/g,'').toLowerCase();
 	}
-	localStorage.setItem('recipes',
-			JSON.stringify({data: [{
+
+	// Idea: Update dummyData, then use dummyData to update localStorage, then re-render.
+	var dummyData = {data: [{
 				id: 'pumpkinpie',
 				name: 'Pumpkin Pie',
 				ingredients: 'pumpkin puree, sweetened condensed milk, eggs, pumpkin pie spice, pie crust'
@@ -32,28 +33,39 @@
 				id: 'spaghetti',
 				name: 'Spaghetti',
 				ingredients: 'spaghetti noodles, tomato sauce, meatballs'
-			}]}));
+			}]};
 	</script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.18.1/babel.min.js"></script>
 	<script type="text/babel">
+
+	var update = function() {
+		localStorage.setItem('recipes', JSON.stringify(dummyData));
+		ReactDOM.render(
+			<RecipeBox data={JSON.parse(localStorage.getItem('recipes'))} />,
+			document.getElementById('root')
+		)
+	}
+
 	class RecipeBox extends React.Component {
 		constructor(props) {
 			super(props);
-			this.state = JSON.parse(localStorage.getItem('recipes'))
+			this.state = this.props.data;
 			this.addRecipe = this.addRecipe.bind(this);
 			this.deleteRecipe = this.deleteRecipe.bind(this);
 			this.editRecipe = this.editRecipe.bind(this);
 		}
 		deleteRecipe(item) {
-			var items = this.state.data.filter(function(itm){
+			var dummyStatedata = this.state.data.filter(function(itm){
 				return item.id !== itm.id;
 			});
-			this.setState({data: items})
+			localStorage.recipes = '{"data":'+JSON.stringify(dummyStatedata)+'}'
+			this.setState({data: dummyStatedata})
 		}
 
 		addRecipe(item) {
 			var dummyStatedata = this.state.data;
 			dummyStatedata.push(item);
+			localStorage.recipes = '{"data":'+JSON.stringify(dummyStatedata)+'}'
 			this.setState({data: dummyStatedata})
 		}
 
@@ -66,9 +78,9 @@
 					break;
 				}
 			}
-			this.setState({data:dummyStatedata})
+			localStorage.recipes = '{"data":'+JSON.stringify(dummyStatedata)+'}'
+			this.setState({data:dummyStatedata});
 		}
-
 		render() {
 			return (
 				<Grid>
@@ -102,18 +114,18 @@
 		render() {
 			var recipeData = this.props.recipedata.map(function(recipe,i) {
 				return (
-					<PanelGroup accordion>
-							<Panel collapsible header={recipe.name}>
-							<RecipeIngredients ingredients={recipe.ingredients.split(', ')} />
-							<Button bsStyle="danger" data-id={recipe.id} onClick={this.remove(recipe)}>Remove</Button>
-							<EditRecipeModal recipeName={recipe.name} recipeIngredients={recipe.ingredients} editRecipeFunction={this.edit} />
-							</Panel>
-					</PanelGroup>
+					<Panel collapsible header={recipe.name} eventKey={i} key={recipe.id}>
+					<RecipeIngredients ingredients={recipe.ingredients.split(', ')} />
+					<Button bsStyle="danger" onClick={this.remove(recipe)}>Remove</Button>
+					<EditRecipeModal recipeName={recipe.name} recipeIngredients={recipe.ingredients} editRecipeFunction={this.edit} />
+					</Panel>
 				)}.bind(this));
 			return (
 				<div>
 					<h2>Recipes</h2>
+					<PanelGroup>
 					{recipeData}
+					</PanelGroup>
 				</div>
 			)
 		}
@@ -146,6 +158,7 @@
 		editRecipeModalButton() {
 			return function(e) {
 				e.preventDefault();
+				this.close();
 				var recipe = {
 					id: slugify(document.getElementById("editRecipeName").value), 
 					name: document.getElementById("editRecipeName").value,
@@ -180,7 +193,7 @@
 	render() {
 		var ingredients = this.props.ingredients.map(function(ingredient) {
 			return(
-				<ListGroupItem>{ingredient}</ListGroupItem>
+				<ListGroupItem key={slugify(ingredient)}>{ingredient}</ListGroupItem>
 			)
 		})
 		return (
@@ -233,9 +246,7 @@
 		}
 	})
 
-	ReactDOM.render(
-		<RecipeBox />,
-		document.getElementById('root')
-	)
+
+	update();
 	</script>
 </body>
