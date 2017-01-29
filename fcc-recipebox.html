@@ -19,6 +19,7 @@
 	var PanelGroup = ReactBootstrap.PanelGroup;
 	var Modal = ReactBootstrap.Modal;
 
+	// Function to generate slug for each recipe to use as an id/unique key
 	var slugify = function(string) {
 		return string.replace(/\s+/g,'').toLowerCase();
 	}
@@ -34,18 +35,10 @@
 				name: 'Spaghetti',
 				ingredients: 'spaghetti noodles, tomato sauce, meatballs'
 			}]};
+	localStorage.setItem('recipes', JSON.stringify(dummyData));
 	</script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.18.1/babel.min.js"></script>
 	<script type="text/babel">
-
-	var update = function() {
-		localStorage.setItem('recipes', JSON.stringify(dummyData));
-		ReactDOM.render(
-			<RecipeBox data={JSON.parse(localStorage.getItem('recipes'))} />,
-			document.getElementById('root')
-		)
-	}
-
 	class RecipeBox extends React.Component {
 		constructor(props) {
 			super(props);
@@ -135,7 +128,6 @@
 		constructor(props) {
 			super(props);
 			this.state = { nameValue: props.recipeName, ingredientValue: props.recipeIngredients, showModal: false };
-
 			this.handleNameChange = this.handleNameChange.bind(this);
 			this.handleIngredientChange = this.handleIngredientChange.bind(this);
 			this.close = this.close.bind(this);
@@ -190,18 +182,18 @@
 	}
 
 	class RecipeIngredients extends React.Component{
-	render() {
-		var ingredients = this.props.ingredients.map(function(ingredient) {
-			return(
-				<ListGroupItem key={slugify(ingredient)}>{ingredient}</ListGroupItem>
+		render() {
+			var ingredients = this.props.ingredients.map(function(ingredient) {
+				return(
+					<ListGroupItem key={slugify(ingredient)}>{ingredient}</ListGroupItem>
+				)
+			})
+			return (
+				<ListGroup>
+					{ingredients}
+				</ListGroup>
 			)
-		})
-		return (
-			<ListGroup>
-				{ingredients}
-			</ListGroup>
-		)
-	}
+		}
 	}
 
 	var AddRecipeModal = React.createClass({
@@ -217,11 +209,11 @@
 		addRecipeModalButton() {
 			return function(e) {
 				e.preventDefault();
-				var recipe = {name: document.getElementById("recipeInput").value, ingredients: document.getElementById("recipeIngredients").value}
+				this.close();
+				var recipe = {id: slugify(document.getElementById("recipeInput").value), name: document.getElementById("recipeInput").value, ingredients: document.getElementById("recipeIngredients").value}
 				return this.props.onAdd(recipe);
 			}.bind(this);
 		},
-
 		render() {
 			return(
 				<div>
@@ -245,8 +237,9 @@
 				)
 		}
 	})
-
-
-	update();
+	ReactDOM.render(
+		<RecipeBox data={JSON.parse(localStorage.getItem('recipes'))} />,
+		document.getElementById('root')
+	)
 	</script>
 </body>
