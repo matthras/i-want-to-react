@@ -1,0 +1,70 @@
+
+<head>
+	<style>
+	.rect0 {
+		fill: black;
+	}
+
+	.rect1 {
+		fill: white;
+	}
+	</style>
+</head>
+<body>
+	<div id="root"></div>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.18.1/babel.min.js"></script>
+	<script type="text/babel">
+
+	var Pixels = React.createClass({
+		render: function() {
+			var dots = this.props.row.map( function(j,index) {
+				return (
+					<rect x={index*25} width="25" height="25" className={"rect"+j} />
+				);
+			})
+		return (
+			<g transform={"translate(0," + this.props.rowIndex*25 + ")"}>
+				{dots}
+			</g>
+			)
+		}
+	})
+
+	var Grid = React.createClass({
+		render: function() {
+			var rows = this.props.data.map( function(i, index) {
+					return(
+							<Pixels row={i} rowIndex={index} />
+						)
+				});
+		return (
+			<svg width="100" height="100" viewBox="0 0 100 100">
+				{rows}
+			</svg>
+		)
+	}
+	})
+
+
+	var App = React.createClass({
+		getInitialState() {
+			return {grid: [[0,1,0,1],[1,0,1,0],[0,1,0,1],[1,0,1,0]]};
+		},		
+		render: function() {
+			return(
+				<div>
+					<Grid data={this.state.grid} />
+				</div>
+			)
+		}
+	})
+
+	ReactDOM.render(
+		<App />,
+		document.getElementById('root')
+	)
+
+	</script>
+</body>
