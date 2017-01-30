@@ -53,13 +53,15 @@
 			return {grid: [[0,1,0,1],[1,0,1,0],[0,1,0,1],[1,0,1,0]]};
 		},
 		change1and0() {
-			var dummyGrid = this.state.grid;
-			for(var i = 0; i<dummyGrid.length; i++){
-				for(var j = 0; j<dummyGrid.length; j++){
-					dummyGrid[i][j] = Math.abs(dummyGrid[i][j]-1)
+			setInterval( () => { 
+				var dummyGrid = this.state.grid;
+				for(var i = 0; i<dummyGrid.length; i++){
+					for(var j = 0; j<dummyGrid.length; j++){
+						dummyGrid[i][j] = Math.abs(dummyGrid[i][j]-1)
+					}
 				}
-			}
-			this.setState({grid: dummyGrid});
+				this.setState({grid: dummyGrid});
+			}, 500);
 		},		
 		render: function() {
 			return(
