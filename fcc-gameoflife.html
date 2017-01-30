@@ -50,7 +50,22 @@
 
 	var App = React.createClass({
 		getInitialState() {
-			return {grid: [[0,1,0,1],[1,0,1,0],[0,1,0,1],[1,0,1,0]]};
+			return {
+				grid: [[0,1,0,1],[1,0,1,0],[0,1,0,1],[1,0,1,0]],
+				gridWidth: 4,
+				gridHeight: 4
+			};
+		},
+		generateGrid() {
+			var randomGrid = [];
+			for(var h=0; h<this.state.gridHeight; h++){
+				var row = [];
+				for(var w = 0; w<this.state.gridWidth; w++){
+					row.push(Math.floor(Math.random()*2));
+				}
+				randomGrid.push(row);
+			}
+			this.setState({grid: randomGrid})
 		},
 		change1and0() {
 			var startThisShit = setInterval( () => { 
@@ -70,6 +85,7 @@
 			return(
 				<div>
 					<Grid data={this.state.grid} />
+					<button onClick={this.generateGrid}>Generate a random grid</button>
 					<button onClick={this.change1and0}>Click me!</button>
 					<button onClick={this.stopThisShit}>Stop Me! </button>
 				</div>
