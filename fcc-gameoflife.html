@@ -51,11 +51,21 @@
 	var App = React.createClass({
 		getInitialState() {
 			return {grid: [[0,1,0,1],[1,0,1,0],[0,1,0,1],[1,0,1,0]]};
+		},
+		change1and0() {
+			var dummyGrid = this.state.grid;
+			for(var i = 0; i<dummyGrid.length; i++){
+				for(var j = 0; j<dummyGrid.length; j++){
+					dummyGrid[i][j] = Math.abs(dummyGrid[i][j]-1)
+				}
+			}
+			this.setState({grid: dummyGrid});
 		},		
 		render: function() {
 			return(
 				<div>
 					<Grid data={this.state.grid} />
+					<button onClick={this.change1and0}>Click me!</button>
 				</div>
 			)
 		}
