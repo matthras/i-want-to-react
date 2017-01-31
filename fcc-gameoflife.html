@@ -2,11 +2,15 @@
 <head>
 	<style>
 	.rect0 {
-		fill: black;
+		fill: white;
+		stroke: black;
+		stroke-width: 1px;
 	}
 
 	.rect1 {
-		fill: white;
+		fill: black;
+		stroke: black;
+		stroke-width:1px;
 	}
 	</style>
 </head>
@@ -21,11 +25,11 @@
 		render: function() {
 			var dots = this.props.row.map( function(j,index) {
 				return (
-					<rect x={index*25} width="25" height="25" className={"rect"+j} />
+					<rect x={index*10} width="10" height="10" className={"rect"+j} />
 				);
 			})
 		return (
-			<g transform={"translate(0," + this.props.rowIndex*25 + ")"}>
+			<g transform={"translate(0," + this.props.rowIndex*10 + ")"}>
 				{dots}
 			</g>
 			)
@@ -40,7 +44,7 @@
 						)
 				});
 		return (
-			<svg width="100" height="100" viewBox="0 0 100 100">
+			<svg width="500" height="500" viewBox="0 0 500 500">
 				{rows}
 			</svg>
 		)
@@ -51,10 +55,13 @@
 	var App = React.createClass({
 		getInitialState() {
 			return {
-				grid: [[0,1,0,1],[1,0,1,0],[0,1,0,1],[1,0,1,0]],
-				gridWidth: 4,
-				gridHeight: 4
+				grid: [],
+				gridWidth: 50,
+				gridHeight: 50
 			};
+		},
+		componentWillMount() {
+			this.generateGrid();
 		},
 		generateGrid() {
 			var randomGrid = [];
@@ -67,26 +74,63 @@
 			}
 			this.setState({grid: randomGrid})
 		},
-		change1and0() {
-			var startThisShit = setInterval( () => { 
-				var dummyGrid = this.state.grid;
-				for(var i = 0; i<dummyGrid.length; i++){
-					for(var j = 0; j<dummyGrid.length; j++){
-						dummyGrid[i][j] = Math.abs(dummyGrid[i][j]-1)
-					}
-				}
-				this.setState({grid: dummyGrid, intervalId: startThisShit});
-			}, 100);
-		},
 		stopThisShit() {
 			clearInterval(this.state.intervalId)
 		},
+		gameOfLife() {
+		var startThisShit = setInterval( () => {
+		  var oldGrid = this.state.grid;
+		  var newGrid = [];
+		  // Iterating through grid
+		  for(var i=0; i<this.state.gridHeight; i++) {
+		    var row = [];
+		    for(var j=0; j<this.state.gridWidth; j++) {
+		      var iRows = [i-1, i, i+1];
+		      var jCols = [j-1, j, j+1];
+		      var sum = 0;
+		      // Iterating through surrounding pixels/neighbours
+		      for(var r=0; r<iRows.length; r++) {
+		        for(var c=0; c<jCols.length; c++) {
+		          if(iRows[r] < 0 || jCols[c] < 0 || iRows[r] >= this.state.gridHeight || jCols[c] >= this.state.gridWidth) {
+		            continue;
+		          } else {
+		          sum += oldGrid[iRows[r]][jCols[c]];
+		          }
+		        }
+		      }
+		      // If the pixel being investigated is live, subtract 1
+		      if(oldGrid[i][j]===1) {
+		        sum -= 1
+		      }
+		      if(oldGrid[i][j]===0){
+		        // Any dead cell with exactly 3 live neighbours becomes a live cell
+		        if(sum==3){
+		          row.push(1);
+		        } else {
+		          row.push(0);
+		        }
+		      // Live cells
+		      } else {
+		        // Any live cell with fewer than two live neighbours dies
+		        // Any live cell with more than 3 live neighbours dies
+		        if(sum < 2 || sum > 3) {
+		          row.push(0);
+		        // Any live cell with 2 or 3 live neighbours lives
+		        } else if (sum === 2 || sum === 3) {
+		          row.push(1);
+		        }
+		      }
+		    }
+		    newGrid.push(row)
+		  }
+			this.setState({grid:newGrid, intervalId: startThisShit})
+		}, 100 )},
 		render: function() {
 			return(
 				<div>
 					<Grid data={this.state.grid} />
 					<button onClick={this.generateGrid}>Generate a random grid</button>
-					<button onClick={this.change1and0}>Click me!</button>
+					<button onClick={this.gameOfLife}>Click me!</button>
 					<button onClick={this.stopThisShit}>Stop Me! </button>
 				</div>
 			)
