@@ -1,5 +1,6 @@
 
 <head>
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
 	<style>
 	.rect0 {
 		fill: white;
@@ -74,8 +75,13 @@
 			}
 			this.setState({grid: randomGrid})
 		},
-		stopThisShit() {
-			clearInterval(this.state.intervalId)
+		changeGridHeight(event) {
+			this.setState({gridHeight: event.target.value});
+			this.generateGrid();
+		},
+		changeGridWidth(event) {
+			this.setState({gridWidth: event.target.value});
+			this.generateGrid();
 		},
 		gameOfLife() {
 		var startThisShit = setInterval( () => {
@@ -125,13 +131,20 @@
 		  }
 			this.setState({grid:newGrid, intervalId: startThisShit})
 		}, 100 )},
+		stopThisShit() {
+			clearInterval(this.state.intervalId)
+		},
 		render: function() {
 			return(
 				<div>
+					<div className="row">
+						<label># Rows:</label> <input type="number" defaultValue={this.state.gridHeight} onChange={this.changeGridHeight} />
+						<label># Columns:</label> <input type="number" defaultValue={this.state.gridWidth} onChange={this.changeGridWidth} />
+						<button onClick={this.generateGrid}>Gimme Another Grid!</button>
+						<button onClick={this.gameOfLife}>Start!</button>
+						<button onClick={this.stopThisShit}>Stop! </button>
+					</div>
 					<Grid data={this.state.grid} />
-					<button onClick={this.generateGrid}>Generate a random grid</button>
-					<button onClick={this.gameOfLife}>Click me!</button>
-					<button onClick={this.stopThisShit}>Stop Me! </button>
 				</div>
 			)
 		}
