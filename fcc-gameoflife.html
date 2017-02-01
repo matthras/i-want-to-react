@@ -44,43 +44,58 @@
 							<Pixels row={i} rowIndex={index} />
 						)
 				});
+			var viewbox = "0 0 "+this.props.width+" 500"
 		return (
-			<svg width="500" height="500" viewBox="0 0 500 500">
+			<svg width={this.props.width} height="500" viewBox={viewbox}>
 				{rows}
 			</svg>
 		)
 	}
 	})
 
-
 	var App = React.createClass({
 		getInitialState() {
 			return {
 				grid: [],
-				gridWidth: 50,
-				gridHeight: 50
+				nCols: 50,
+				nRows: 50
 			};
-		},
-		componentWillMount() {
-			this.generateGrid();
 		},
 		generateGrid() {
 			var randomGrid = [];
-			for(var h=0; h<this.state.gridHeight; h++){
+			for(var h=0; h<this.state.nRows; h++){
 				var row = [];
-				for(var w = 0; w<this.state.gridWidth; w++){
+				for(var w = 0; w<Math.floor((window.innerWidth*0.95)/10); w++){
 					row.push(Math.floor(Math.random()*2));
 				}
 				randomGrid.push(row);
 			}
 			this.setState({grid: randomGrid})
 		},
+		updateDimensions() {
+			this.setState({ 
+				width: (window.innerWidth*0.95),
+				height: window.innerHeight || document.body.clientHeight
+				})
+			this.setState({ nCols: Math.floor((window.innerWidth*0.95)/10) })
+		},
+		componentWillMount() {
+			this.updateDimensions();
+			this.generateGrid();
+		},
+		componentDidMount() {
+			window.addEventListener("resize", this.updateDimensions);
+			window.addEventListener("resize", this.changeGridWidth);
+		},
+		componentWillUnmount() {
+			window.removeEventListener("resize", this.updateDimensions);
+		},
 		changeGridHeight(event) {
-			this.setState({gridHeight: event.target.value});
+			this.setState({nRows: event.target.value});
 			this.generateGrid();
 		},
 		changeGridWidth(event) {
-			this.setState({gridWidth: event.target.value});
+			this.setState({nCols: event.target.value});
 			this.generateGrid();
 		},
 		gameOfLife() {
@@ -88,16 +103,16 @@
 		  var oldGrid = this.state.grid;
 		  var newGrid = [];
 		  // Iterating through grid
-		  for(var i=0; i<this.state.gridHeight; i++) {
+		  for(var i=0; i<this.state.nRows; i++) {
 		    var row = [];
-		    for(var j=0; j<this.state.gridWidth; j++) {
+		    for(var j=0; j<this.state.nCols; j++) {
 		      var iRows = [i-1, i, i+1];
 		      var jCols = [j-1, j, j+1];
 		      var sum = 0;
 		      // Iterating through surrounding pixels/neighbours
 		      for(var r=0; r<iRows.length; r++) {
 		        for(var c=0; c<jCols.length; c++) {
-		          if(iRows[r] < 0 || jCols[c] < 0 || iRows[r] >= this.state.gridHeight || jCols[c] >= this.state.gridWidth) {
+		          if(iRows[r] < 0 || jCols[c] < 0 || iRows[r] >= this.state.nRows || jCols[c] >= this.state.nCols) {
 		            continue;
 		          } else {
 		          sum += oldGrid[iRows[r]][jCols[c]];
@@ -138,13 +153,13 @@
 			return(
 				<div>
 					<div className="row">
-						<label># Rows:</label> <input type="number" defaultValue={this.state.gridHeight} onChange={this.changeGridHeight} />
-						<label># Columns:</label> <input type="number" defaultValue={this.state.gridWidth} onChange={this.changeGridWidth} />
+						<label># Rows:</label> <input type="number" defaultValue={this.state.nRows} onChange={this.changeGridHeight} min="4" max={this.state.nRows} />
+						<label># Columns:</label> <input type="number" defaultValue={this.state.nCols} onChange={this.changeGridWidth} />
 						<button onClick={this.generateGrid}>Gimme Another Grid!</button>
 						<button onClick={this.gameOfLife}>Start!</button>
 						<button onClick={this.stopThisShit}>Stop! </button>
 					</div>
-					<Grid data={this.state.grid} />
+					<Grid data={this.state.grid} width={this.state.width}/>
 				</div>
 			)
 		}
