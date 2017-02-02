@@ -13,6 +13,34 @@
 		stroke: black;
 		stroke-width:1px;
 	}
+
+	.container {
+		width: 90%;
+		max-width: 1920px;
+		margin: 0 2.5%;
+	}
+	.coverBox {
+		width: 100%;
+		padding: 2em 2.5%;
+		border-style: double;
+	}
+	.divCenter {
+		text-align: center;
+		margin: 0 auto;
+	}
+	button {
+		margin: 6px;
+	}
+
+	input[type="number"] {
+		width: 4.5em;
+		margin: 6px 10px;
+	}
+
+	hr {
+		margin: 1em 0;
+		border-top: 3px double #000;
+	}
 	</style>
 </head>
 <body>
@@ -65,7 +93,7 @@
 			var randomGrid = [];
 			for(var h=0; h<this.state.nRows; h++){
 				var row = [];
-				for(var w = 0; w<Math.floor((window.innerWidth*0.95)/10); w++){
+				for(var w = 0; w<Math.floor((window.innerWidth*0.9)/10); w++){
 					row.push(Math.floor(Math.random()*2));
 				}
 				randomGrid.push(row);
@@ -74,10 +102,10 @@
 		},
 		updateDimensions() {
 			this.setState({ 
-				width: (window.innerWidth*0.95),
+				width: (window.innerWidth*0.9),
 				height: window.innerHeight || document.body.clientHeight
 				})
-			this.setState({ nCols: Math.floor((window.innerWidth*0.95)/10) })
+			this.setState({ nCols: Math.floor((window.innerWidth*0.9)/10) })
 		},
 		componentWillMount() {
 			this.updateDimensions();
@@ -151,15 +179,28 @@
 		},
 		render: function() {
 			return(
-				<div>
+				<div className="container">
+				<div className="coverBox">
 					<div className="row">
-						<label># Rows:</label> <input type="number" defaultValue={this.state.nRows} onChange={this.changeGridHeight} min="4" max={this.state.nRows} />
-						<label># Columns:</label> <input type="number" defaultValue={this.state.nCols} onChange={this.changeGridWidth} />
-						<button onClick={this.generateGrid}>Gimme Another Grid!</button>
-						<button onClick={this.gameOfLife}>Start!</button>
-						<button onClick={this.stopThisShit}>Stop! </button>
+						<h1>Conway's Game Of Life</h1>
 					</div>
-					<Grid data={this.state.grid} width={this.state.width}/>
+					<hr /> 
+					<div className="row">
+						<div className="four columns divCenter">
+							Number of Rows: <input type="number" id="nrows" defaultValue={this.state.nRows} onChange={this.changeGridHeight} min="4" max={this.state.nRows} />
+							Number of Columns: <input type="number" id="ncols" defaultValue={this.state.nCols} onChange={this.changeGridWidth} min="4" />
+						</div>
+						<div className="four columns divCenter">
+							<button onClick={this.generateGrid}>Generate</button>
+							<button onClick={this.gameOfLife}>Start</button>
+							<button onClick={this.stopThisShit}>Stop</button>
+						</div>
+					</div>
+					<hr />
+					<div className="row divCenter">
+						<Grid data={this.state.grid} width={this.state.width}/>
+					</div>
+				</div>
 				</div>
 			)
 		}
