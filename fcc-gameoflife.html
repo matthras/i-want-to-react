@@ -2,44 +2,63 @@
 <head>
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
 	<style>
-	.rect0 {
-		fill: white;
-		stroke: black;
-		stroke-width: 1px;
+	body {
+		background: black;
 	}
 
-	.rect1 {
-		fill: black;
-		stroke: black;
-		stroke-width:1px;
-	}
-
-	.container {
-		width: 90%;
-		max-width: 1920px;
-		margin: 0 2.5%;
-	}
-	.coverBox {
-		width: 100%;
-		padding: 2em 2.5%;
-		border-style: double;
-	}
-	.divCenter {
-		text-align: center;
-		margin: 0 auto;
-	}
 	button {
 		margin: 6px;
+		border: 1px solid #cc99ff;
+		color: #cc99ff;
 	}
 
-	input[type="number"] {
+	button:hover {
+		border: 1px solid #6600cc;
+		color: #6600cc;
+	}
+
+	input[type="number"],
+	input[type="text"] {
 		width: 4.5em;
 		margin: 6px 10px;
 	}
 
 	hr {
 		margin: 1em 0;
-		border-top: 3px double #000;
+		border-top: 3px double #FFF;
+	}
+
+	h1 {
+		color: white;
+	}
+
+	.rect0 {
+		fill: black;
+		stroke: #6600cc;
+		stroke-width: 1px;
+	}
+
+	.rect1 {
+		fill:	url(#fillGradient);
+		stroke: #6600cc;
+		stroke-width:1px;
+	}
+
+	.container {
+		width: 90%;
+		max-width: 2160px;
+		margin: 0 2.5%;
+	}
+	.coverBox {
+		width: 100%;
+		padding: 2em 2.5%;
+		border-style: double;
+		border-color: white;
+	}
+	.divCenter {
+		text-align: center;
+		margin: auto auto;
+		color: #cc99ff;
 	}
 	</style>
 </head>
@@ -75,6 +94,12 @@
 			var viewbox = "0 0 "+this.props.width+" 500"
 		return (
 			<svg width={this.props.width} height="500" viewBox={viewbox}>
+				<defs>
+						<radialGradient id="fillGradient">
+							<stop offset="0%" stopColor="#cc99ff" />
+							<stop offset="100%" stopColor="#6600cc" />
+						</radialGradient>
+				</defs>
 				{rows}
 			</svg>
 		)
@@ -85,11 +110,12 @@
 		getInitialState() {
 			return {
 				grid: [],
-				nCols: 50,
-				nRows: 50
+				nRows: 50,
+				born: [2],
+				survives: [2,3]
 			};
 		},
-		generateGrid() {
+		generateInitialGrid() {
 			var randomGrid = [];
 			for(var h=0; h<this.state.nRows; h++){
 				var row = [];
@@ -100,6 +126,17 @@
 			}
 			this.setState({grid: randomGrid})
 		},
+		generateGrid() {
+			var randomGrid = [];
+			for(var h=0; h<this.state.nRows; h++){
+				var row = [];
+				for(var w = 0; w<this.state.nCols; w++){
+					row.push(Math.floor(Math.random()*2));
+				}
+				randomGrid.push(row);
+			}
+			this.setState({grid: randomGrid});
+		}
 		updateDimensions() {
 			this.setState({ 
 				width: (window.innerWidth*0.9),
@@ -109,7 +146,7 @@
 		},
 		componentWillMount() {
 			this.updateDimensions();
-			this.generateGrid();
+			this.generateInitialGrid();
 		},
 		componentDidMount() {
 			window.addEventListener("resize", this.updateDimensions);
@@ -125,6 +162,12 @@
 		changeGridWidth(event) {
 			this.setState({nCols: event.target.value});
 			this.generateGrid();
+		},
+		changeBorn(event) {
+			this.setState({born: event.target.value});
+		},
+		changeSurvives(event) {
+			this.setState({survives: event.target.value});
 		},
 		gameOfLife() {
 		var startThisShit = setInterval( () => {
@@ -181,19 +224,27 @@
 			return(
 				<div className="container">
 				<div className="coverBox">
-					<div className="row">
+					<div className="row divCenter">
 						<h1>Conway's Game Of Life</h1>
 					</div>
 					<hr /> 
 					<div className="row">
-						<div className="four columns divCenter">
+						<div className="two columns divCenter">
 							Number of Rows: <input type="number" id="nrows" defaultValue={this.state.nRows} onChange={this.changeGridHeight} min="4" max={this.state.nRows} />
+						</div>
+						<div className="two columns divCenter">
 							Number of Columns: <input type="number" id="ncols" defaultValue={this.state.nCols} onChange={this.changeGridWidth} min="4" />
 						</div>
 						<div className="four columns divCenter">
 							<button onClick={this.generateGrid}>Generate</button>
 							<button onClick={this.gameOfLife}>Start</button>
 							<button onClick={this.stopThisShit}>Stop</button>
+						</div>
+						<div className="two columns divCenter">
+							A cell is born if it has <input type="text" defaultValue={this.state.born} /> neighbours.
+						</div>
+						<div className="two columns divCenter">
+							A cell survives if it has <input type="text" defaultValue={this.state.survives} /> neighbours.
 						</div>
 					</div>
 					<hr />
