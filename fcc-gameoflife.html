@@ -111,7 +111,7 @@
 			return {
 				grid: [],
 				nRows: 50,
-				born: [2],
+				born: [3],
 				survives: [2,3]
 			};
 		},
@@ -136,7 +136,7 @@
 				randomGrid.push(row);
 			}
 			this.setState({grid: randomGrid});
-		}
+		},
 		updateDimensions() {
 			this.setState({ 
 				width: (window.innerWidth*0.9),
@@ -175,46 +175,55 @@
 		  var newGrid = [];
 		  // Iterating through grid
 		  for(var i=0; i<this.state.nRows; i++) {
-		    var row = [];
-		    for(var j=0; j<this.state.nCols; j++) {
-		      var iRows = [i-1, i, i+1];
-		      var jCols = [j-1, j, j+1];
-		      var sum = 0;
-		      // Iterating through surrounding pixels/neighbours
-		      for(var r=0; r<iRows.length; r++) {
-		        for(var c=0; c<jCols.length; c++) {
-		          if(iRows[r] < 0 || jCols[c] < 0 || iRows[r] >= this.state.nRows || jCols[c] >= this.state.nCols) {
-		            continue;
-		          } else {
-		          sum += oldGrid[iRows[r]][jCols[c]];
-		          }
-		        }
-		      }
-		      // If the pixel being investigated is live, subtract 1
-		      if(oldGrid[i][j]===1) {
-		        sum -= 1
-		      }
-		      if(oldGrid[i][j]===0){
-		        // Any dead cell with exactly 3 live neighbours becomes a live cell
-		        if(sum==3){
-		          row.push(1);
-		        } else {
-		          row.push(0);
-		        }
-		      // Live cells
-		      } else {
-		        // Any live cell with fewer than two live neighbours dies
-		        // Any live cell with more than 3 live neighbours dies
-		        if(sum < 2 || sum > 3) {
-		          row.push(0);
-		        // Any live cell with 2 or 3 live neighbours lives
-		        } else if (sum === 2 || sum === 3) {
-		          row.push(1);
-		        }
-		      }
-		    }
-		    newGrid.push(row)
-		  }
+			var row = [];
+			for(var j=0; j<this.state.nCols; j++) {
+				var iRows = [i-1, i, i+1];
+				var jCols = [j-1, j, j+1];
+				var sum = 0;
+				// Iterating through surrounding pixels/neighbours
+				for(var r=0; r<iRows.length; r++) {
+					for(var c=0; c<jCols.length; c++) {
+						if(iRows[r] < 0 || jCols[c] < 0 || iRows[r] >= this.state.nRows || jCols[c] >= this.state.jCols) {
+						continue;
+						} else {
+						sum += oldGrid[iRows[r]][jCols[c]];
+						}
+					}
+				}
+				// If the pixel being investigated is live, subtract 1
+				if(oldGrid[i][j]===1) {
+				sum -= 1
+				}
+				// Any dead cell with exactly 3 live neighbours becomes a live cell
+				if(oldGrid[i][j]===0){
+				var wasACellBorn = false;
+				for(var b=0; b < this.state.born.length; b++) {
+					if(sum===this.state.born[b]){
+					row.push(1);
+					wasACellBorn = true;
+					break;
+					}
+				}
+				if(!wasACellBorn) {
+					row.push(0);
+				}
+				// Live cells
+				} else {
+				var didTheCellDie = false;
+				for(var s=0; s< this.state.survives.length; s++) {
+					if(sum===this.state.survives[s]){
+					row.push(1);
+					didTheCellDie = true;
+					break;
+					}
+				}
+				if(!didTheCellDie){
+					row.push(0);
+				}
+				}
+			}
+			newGrid.push(row)
+			}
 			this.setState({grid:newGrid, intervalId: startThisShit})
 		}, 100 )},
 		stopThisShit() {
@@ -241,10 +250,10 @@
 							<button onClick={this.stopThisShit}>Stop</button>
 						</div>
 						<div className="two columns divCenter">
-							A cell is born if it has <input type="text" defaultValue={this.state.born} /> neighbours.
+							A cell is born if it has <br /> <input type="text" defaultValue={this.state.born} /> neighbours.
 						</div>
 						<div className="two columns divCenter">
-							A cell survives if it has <input type="text" defaultValue={this.state.survives} /> neighbours.
+							A cell survives if it has <br /> <input type="text" defaultValue={this.state.survives} /> neighbours.
 						</div>
 					</div>
 					<hr />
@@ -261,6 +270,5 @@
 		<App />,
 		document.getElementById('root')
 	)
-
 	</script>
 </body>
