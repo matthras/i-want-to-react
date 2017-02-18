@@ -1,12 +1,25 @@
 
 <head>
     <style>
+        .rect0 {
+            stroke: white;
+            stroke-width: 1px;
+        }
+
         .rectF {
             fill: green;
+            stroke: white;
+            stroke-width: 1px;
         }
 
         .rectP {
             fill: purple;
+            stroke: white;
+            stroke-width: 1px;
+        }
+
+        #wallAlert {
+            display: none;
         }
     </style>
 </head>
@@ -41,36 +54,38 @@
         }
         collisionCheck(newCoord) {
             if(newCoord < 0 || newCoord > 4) {
+                document.getElementById('wallAlert').style.display= 'block';
                 return false;
                 // And maybe an alert? "Stop hitting the wall, dude."
             } else {
+                document.getElementById('wallAlert').style.display= 'none';
                 return true;
             }
         }
         move(event) {
             // Left 
-            if(event.keyCode == 37){
+            if(event.keyCode == 37 && this.collisionCheck(this.state.playerLocationX-1)){
                 var copyMap = this.state.map;
                 copyMap[this.state.playerLocationY][this.state.playerLocationX] = 0;
                 copyMap[this.state.playerLocationY][this.state.playerLocationX-1] = "P";
                 this.setState({ playerLocationX: this.state.playerLocationX-1, map: copyMap})
             }
             // Right
-            if(event.keyCode == 39){
+            if(event.keyCode == 39 && this.collisionCheck(this.state.playerLocationX+1)){
                 var copyMap = this.state.map;
                 copyMap[this.state.playerLocationY][this.state.playerLocationX] = 0;
                 copyMap[this.state.playerLocationY][this.state.playerLocationX+1] = "P";
                 this.setState({ playerLocationX: this.state.playerLocationX+1, map: copyMap})
             }
             // Up
-            if(event.keyCode == 38){
+            if(event.keyCode == 38 && this.collisionCheck(this.state.playerLocationY-1)){
                 var copyMap = this.state.map;
                 copyMap[this.state.playerLocationY][this.state.playerLocationX] = 0;
                 copyMap[this.state.playerLocationY-1][this.state.playerLocationX] = "P";
                 this.setState({ playerLocationY: this.state.playerLocationY-1, map: copyMap})
             }
             // Down
-            if(event.keyCode == 40){
+            if(event.keyCode == 40 && this.collisionCheck(this.state.playerLocationY+1)){
                 var copyMap = this.state.map;
                 copyMap[this.state.playerLocationY][this.state.playerLocationX] = 0;
                 copyMap[this.state.playerLocationY+1][this.state.playerLocationX] = "P";
@@ -82,6 +97,7 @@
             return(
                 <div id="box">
                     <Map grid={this.state.map} />
+                    <span id="wallAlert">Oi dingus, stop hitting the wall!</span>
                 </div>
             )
         }
