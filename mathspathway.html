@@ -65,7 +65,7 @@
                         }
                     },
                     studentAnswers: [0,0,0],
-                    correctAnswers: [3,2,4]
+                    correctAnswers: ["90",2,4]
                 }
                 this.questionAnswered = this.questionAnswered.bind(this);
                 this.closeModal = this.closeModal.bind(this);
@@ -84,8 +84,14 @@
                     this.setState({ allQuestionscomplete: true, showModal: false });
                 } else {
                     // Record answer
-                    // Increment question number by 1
-                    this.setState({ currentQuestion: this.state.currentQuestion + 1});
+                    var currentStudentAnswers = this.state.studentAnswers;
+                    var questionName = 'input[name='+'"q'+this.state.currentQuestion.toString()+'"]'
+                    currentStudentAnswers[this.state.currentQuestion-1] = document.querySelector(questionName).value;
+                    // Increment question number by 1 and update studentAnswers
+                    this.setState({ 
+                        currentQuestion: this.state.currentQuestion + 1, 
+                        studentAnswers: currentStudentAnswers
+                    });
                 }
             }
             previousQuestion() {
@@ -98,7 +104,7 @@
                 var answerList = this.state.questionList[this.state.currentQuestion].answers.map( function(a) { 
                     return(
                         <div>
-                            <input type="radio" name={questionNumber} /> {a}<br />
+                            <input type="radio" name={questionNumber}/> {a}<br />
                         </div>
                         ) 
                     });
