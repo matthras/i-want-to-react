@@ -63,35 +63,46 @@
                             questionText: "Michela was recruited by Justin and Richard a year ago and is tasked with writing maths questions for short quizzes like these. In a single hour, Michela can either write 5 high-quality questions or 10 medium-quality questions. ",
                             answers: []
                         }
-                    }
+                    },
+                    studentAnswers: [0,0,0],
+                    correctAnswers: [3,2,4]
                 }
                 this.questionAnswered = this.questionAnswered.bind(this);
                 this.closeModal = this.closeModal.bind(this);
                 this.openModal = this.openModal.bind(this);
+                this.previousQuestion = this.previousQuestion.bind(this);
             };
             openModal() {
-                this.setState({showModal:true})
-            }
+                this.setState({showModal:true});
+            };
             closeModal() {
                 this.setState({showModal: false});
             };
-
             // If all questions have been answered, close the Modal and activate the results screen. Else increment question number by 1.
             questionAnswered() {
                 if(this.state.currentQuestion === this.state.numberofQuestions) {
                     this.setState({ allQuestionscomplete: true, showModal: false });
                 } else {
+                    // Record answer
+                    // Increment question number by 1
                     this.setState({ currentQuestion: this.state.currentQuestion + 1});
                 }
             }
+            previousQuestion() {
+                if(this.state.currentQuestion !== 1) {
+                    this.setState({ currentQuestion: this.state.currentQuestion-1 });
+                }
+            }
             render() {
+                var questionNumber = 'q'.concat(this.state.currentQuestion.toString());
                 var answerList = this.state.questionList[this.state.currentQuestion].answers.map( function(a) { 
                     return(
                         <div>
-                            <input type="radio" /> {a}<br />
+                            <input type="radio" name={questionNumber} /> {a}<br />
                         </div>
                         ) 
                     });
+                
                 return(
                     <div>
                         <Grid>
@@ -116,8 +127,9 @@
                                 </form>
                             </Modal.Body>
                             <Modal.Footer>
-                                <button onClick={this.questionAnswered}>Submit</button>
-                                <button onClick={this.closeModal}>Close</button>
+                                <Button onClick={this.previousQuestion} bsStyle="danger">Back</Button>
+                                <Button onClick={this.questionAnswered} bsStyle="success">Submit</Button>
+                                <Button onClick={this.closeModal} bsStyle="info">Close</Button>
                             </Modal.Footer>
                         </Modal>
                     </div>
