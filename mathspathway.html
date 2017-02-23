@@ -1,0 +1,106 @@
+<head>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css"></link>
+</head>
+<body>
+	<div id="root"></div>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-bootstrap/0.30.7/react-bootstrap.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.18.1/babel.min.js"></script>
+	<script type="text/babel">
+        var Modal = ReactBootstrap.Modal;
+        var Grid = ReactBootstrap.Grid;
+        var Col = ReactBootstrap.Col;
+        var Row = ReactBootstrap.Row;
+        var Panel = ReactBootstrap.Panel;
+        
+        class App extends React.Component {
+            constructor(props) {
+                super(props)
+                this.state = {
+                    showModal: false,
+                    // Note: Most of these initial state variables can be pulled from a database, but is obviously manually coded for the purposes of this exercise.
+                    currentQuestion: 1,
+                    numberofQuestions: 3,
+                    allQuestionsComplete: false,
+                    questionList: {
+                        '1': {
+                            questionText: "Justin is looking over the data for his current venture and is attempting to estimate how many clients he'll reach in the following year. The graph of his progress can be seen below. What would be the best estimate (assuming a linear growth) as to how many clients Justin will receive in 2017?",
+                            answers: ["10", "40", "90", "130", "200"],
+                            assets: ['q1graph.png'],
+                            correctAnswer: "C"
+                        },
+                        '2': {
+                            questionText: "Justin's friend Richard is grappling with the technology costs for Justin's venture and is comparing pricing data between two server providers. Amathaszon Web Services charges X1 initial cost with X2 per year, and Decimal Ocean charges an upfront cost of Y1 with Y2 per year. Which of these services will cost more after three years?",
+                            answers: ["Amathsazon Web Services", "Decimal Ocean", "Both will cost the same", 'Neither']
+                        },
+                        '3': {
+                            questionText: "Michela was recruited by Justin and Richard a year ago and is tasked with writing maths questions for short quizzes like these. In a single hour, Michela can either write 5 high-quality questions or 10 medium-quality questions. ",
+                            answers: []
+                        }
+                    }
+                }
+                this.questionAnswered = this.questionAnswered.bind(this);
+                this.closeModal = this.closeModal.bind(this);
+                this.openModal = this.openModal.bind(this);
+            };
+            openModal() {
+                this.setState({showModal:true})
+            }
+            closeModal() {
+                this.setState({showModal: false});
+            };
+
+            // If all questions have been answered, close the Modal and activate the results screen. Else increment question number by 1.
+            questionAnswered() {
+                if(this.state.currentQuestion === this.state.numberofQuestions) {
+                    this.setState({ allQuestionscomplete: true, showModal: false });
+                } else {
+                    this.setState({ currentQuestion: this.state.currentQuestion + 1});
+                }
+            }
+            render() {
+                var answerList = this.state.questionList[this.state.currentQuestion].answers.map( function(a) { 
+                    return(
+                        <div>
+                            <input type="radio" /> {a}<br />
+                        </div>
+                        ) 
+                    });
+                return(
+                    <div>
+                        <Grid>
+                            <Row>
+                                <Col xs={12} md={8} mdOffset={4}>
+                                    <Panel header="Welcome to Matt's Maths Quiz!" bsStyle="success">
+                                        <button onClick={this.openModal}>Click me!</button>
+                                    </Panel>
+                                </Col>
+                            </Row>
+                        </Grid>
+                        <Modal show={this.state.showModal} onHide={this.close}>
+                            <Modal.Header closeButton>
+                                <Modal.Title>Question {this.state.currentQuestion}</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                <p>{this.state.questionList[this.state.currentQuestion].questionText}</p>
+                                <form>
+                                    {answerList}
+                                </form>
+                            </Modal.Body>
+                            <Modal.Footer>
+                                <button onClick={this.questionAnswered}>Submit</button>
+                                <button onClick={this.closeModal}>Close</button>
+                            </Modal.Footer>
+                        </Modal>
+                    </div>
+                )
+            }
+        }
+
+        ReactDOM.render(
+            <App />,
+            document.getElementById('root')
+        )
+    </script>
+</body>
