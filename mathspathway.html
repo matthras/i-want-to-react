@@ -14,7 +14,7 @@
             max-width: 1000px;
             padding: 40px;
             }
-        }
+        }        
     </style>
 </head>
 <body>
@@ -29,6 +29,7 @@
         var Col = ReactBootstrap.Col;
         var Row = ReactBootstrap.Row;
         var Panel = ReactBootstrap.Panel;
+        var Button = ReactBootstrap.Button;
         
         class App extends React.Component {
             constructor(props) {
@@ -90,7 +91,7 @@
                                 <div className="absolute-center responsive">
                                 <Col xs={12} md={8} mdOffset={2}>
                                     <Panel header="Welcome to Matt's Maths Quiz!" bsStyle="success">
-                                        <button onClick={this.openModal}>Click me!</button>
+                                        <Button bsStyle="success" onClick={this.openModal}>Click me to get started!</Button>
                                     </Panel>
                                 </Col>
                                 </div>
