@@ -50,18 +50,22 @@
             this.collisionCheck = this.collisionCheck.bind(this);
         }
         componentWillMount() {
+            // Adds keydown event listener to detect arrow buttons being pressed
             document.addEventListener("keydown",this.move, false)
         }
+        // Function to determine if the player collides with a wall.
+        // If it does, shows a collision message and prevents the player moving.
+        // If it doesn't, then player moves.
         collisionCheck(newCoord) {
             if(newCoord < 0 || newCoord > 4) {
                 document.getElementById('wallAlert').style.display= 'block';
                 return false;
-                // And maybe an alert? "Stop hitting the wall, dude."
             } else {
                 document.getElementById('wallAlert').style.display= 'none';
                 return true;
             }
         }
+        // Event handler for keydown event (arrow keys)
         move(event) {
             // Left 
             if(event.keyCode == 37 && this.collisionCheck(this.state.playerLocationX-1)){
@@ -102,7 +106,7 @@
             )
         }
     }
-
+    // Map component - renders a row at a time.
     var Map = React.createClass({
 		render: function() {
 			var rows = this.props.grid.map( function(i, index) {
@@ -118,7 +122,7 @@
 		)
 	}
 	})
-
+    // Individual rows where each individual tile is rendered.
     var Tiles = React.createClass({
 		render: function() {
 			var dots = this.props.row.map( function(j,index) {
