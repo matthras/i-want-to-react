@@ -1,19 +1,32 @@
 
 <head>
     <style>
+        /* Blank Dungeon Tile */
         .rect0 {
             stroke: white;
             stroke-width: 1px;
         }
-
+        /* Exit Location */
         .rectF {
             fill: green;
             stroke: white;
             stroke-width: 1px;
         }
-
+        /* Player */
         .rectP {
             fill: purple;
+            stroke: white;
+            stroke-width: 1px;
+        }
+        /* Monster */
+        .rectM {
+            fill: red;
+            stroke: white;
+            stroke-width: 1px;
+        }
+        /* Sword Drop */
+        .rectS {
+            fill: blue;
             stroke: white;
             stroke-width: 1px;
         }
@@ -48,6 +61,8 @@
             }
             this.move = this.move.bind(this);
             this.collisionCheck = this.collisionCheck.bind(this);
+            this.finishCheck = this.finishCheck.bind(this);
+            this.restartGame = this.restartGame.bind(this);
         }
         componentWillMount() {
             // Adds keydown event listener to detect arrow buttons being pressed
@@ -65,7 +80,18 @@
                 return true;
             }
         }
+        finishCheck(newXcoord, newYcoord) {
+            // If player's position is the same as the finish position...
+            // Show 'Yay, you reached the exit!'
+        }
+        restartGame() {
+            // Reset state to default
+        }
         // Event handler for keydown event (arrow keys)
+        // Basically pretty much all other functions/collisions go into this function.
+        // I'm sure there's gotta be a better way to handle this...
+        // One idea is to have a single function that returns a pair of coordinates.
+        // Then we only update the map (as a separate single function) once we've checked all possible collisions. 
         move(event) {
             // Left 
             if(event.keyCode == 37 && this.collisionCheck(this.state.playerLocationX-1)){
