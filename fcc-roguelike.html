@@ -57,7 +57,37 @@
                 // Note: [0,0] is the top left, in line with array coordinates;
                 // When accessing elements of this array, need to refer to Y value first, then X value.
                 playerLocationX: 0,
-                playerLocationY: 4
+                playerLocationY: 4,
+                monsters: {
+                    'Red': {
+                        Health: 10
+                        Attack: 1
+                        Moveset: ['L', 'R']
+                        Moveset Stage: 0
+                        Coordinates: [Y, X]
+                    },
+                    'Blue': {
+                        Health: 5
+                        Attack: 2
+                        Moveset: ['R', 'U', 'L', 'D']
+                        Moveset Stage: 0
+                        Coordinates: 
+                    },
+                    'Green': {
+                        Health: 3
+                        Attack: 3
+                        Moveset: ['U', 'U', 'D', 'D']
+                        Moveset Stage: 0
+                        Coordinates: 
+                    },
+                    'Orange': {
+                        Health: 1
+                        Attack: 10
+                        Moveset: ['R', 'U', 'L', 'D']
+                        Moveset Stage: 0
+                        Coordinates: 
+                    }
+                }
             }
             this.move = this.move.bind(this);
             this.wallCollisionCheck = this.collisionCheck.bind(this);
