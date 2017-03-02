@@ -60,7 +60,7 @@
                 playerLocationY: 4
             }
             this.move = this.move.bind(this);
-            this.collisionCheck = this.collisionCheck.bind(this);
+            this.wallCollisionCheck = this.collisionCheck.bind(this);
             this.finishCheck = this.finishCheck.bind(this);
             this.restartGame = this.restartGame.bind(this);
         }
@@ -71,7 +71,7 @@
         // Function to determine if the player collides with a wall.
         // If it does, shows a collision message and prevents the player moving.
         // If it doesn't, then player moves.
-        collisionCheck(newCoord) {
+        wallCollisionCheck(newCoord) {
             if(newCoord < 0 || newCoord > 4) {
                 document.getElementById('wallAlert').style.display= 'block';
                 return false;
@@ -87,13 +87,26 @@
         restartGame() {
             // Reset state to default
         }
-        // Event handler for keydown event (arrow keys)
-        // Basically pretty much all other functions/collisions go into this function.
-        // I'm sure there's gotta be a better way to handle this...
-        // One idea is to have a single function that returns a pair of coordinates.
-        // Then we only update the map (as a separate single function) once we've checked all possible collisions. 
+        // Function that returns a pair of coordinates of the player's location AFTER an arrow key is pressed
+        newPlayerCoords(event) {
+          switch(event.keyCode) {
+            // Left
+            case 37:
+              return [this.state.playerLocationY, this.state.playerLocationX-1];
+            // Right
+            case 39:
+              return [this.state.playerLocationY, this.state.playerLocationX+1];
+            // Up
+            case 38:
+              return [this.state.playerLocationY-1, this.state.playerLocationX];
+            // Down
+            case 40:
+              return [this.state.playerLocationY+1, this.state.playerLocationX];
+          }
+        }
+        // Then we only update the map (as a separate single function) once we've checked all possible collisions.
         move(event) {
-            // Left 
+            // Left
             if(event.keyCode == 37 && this.collisionCheck(this.state.playerLocationX-1)){
                 var copyMap = this.state.map;
                 copyMap[this.state.playerLocationY][this.state.playerLocationX] = 0;
